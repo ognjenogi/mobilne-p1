@@ -121,7 +121,7 @@ fun AppNavigation(viewModel:BreedListViewModel,detailsViewModel: BreedDetailsVie
         }
     }
 
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @Composable
 fun onClickSearch(name: String,navController: NavHostController, viewModel: BreedListViewModel) {
 
@@ -131,7 +131,7 @@ fun onClickSearch(name: String,navController: NavHostController, viewModel: Bree
         if (name.isEmpty())
             viewModel.processIntent(BreedListIntent.LoadBreeds)
         else
-        viewModel.processIntent(BreedListIntent.SearchByName(name=name))
+            viewModel.processIntent(BreedListIntent.SearchByName(name=name))
     }
 
     when (val state = breedsState) {
