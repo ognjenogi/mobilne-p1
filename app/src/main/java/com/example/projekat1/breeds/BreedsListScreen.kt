@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BreedsListScreen(
-    breeds: List<Breed>,
+    state: BreedListState.Success,
     onBreedClick:  (Breed) -> Unit,
     onSearchClick:  (String) -> Unit
 ) {
@@ -46,7 +46,7 @@ fun BreedsListScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn {
-            items(breeds) { breed ->
+            items(state.breeds) { breed ->
                 BreedListItem(breed = breed, onItemClick = { onBreedClick(breed)})
                 Divider()
             }

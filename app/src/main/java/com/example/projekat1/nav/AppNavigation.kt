@@ -113,7 +113,7 @@ fun AppNavigation(viewModel:BreedListViewModel,detailsViewModel: BreedDetailsVie
             }
             is BreedDetailsState.Success -> {
                 val context = LocalContext.current
-                state.breed?.let { BreedDetailsScreen(breed = it,context,state.pic) }
+                BreedDetailsScreen(state,context)
             }
             is BreedDetailsState.Error -> {
                 Text(text = "Error: ${state.message}")
@@ -149,7 +149,7 @@ fun onClickSearch(name: String,navController: NavHostController, viewModel: Bree
         is BreedListState.Success -> {
 
             BreedsListScreen(
-                breeds = state.breeds ?: emptyList(),
+                state = state,
                 onBreedClick = { breed ->
                     navController.navigate(route = "det/breeds?id=${breed.id}")
                 },
@@ -188,7 +188,7 @@ fun showAll(navController: NavHostController, viewModel: BreedListViewModel) {
         is BreedListState.Success -> {
 
             BreedsListScreen(
-                breeds = state.breeds ?: emptyList(),
+                state= state,
                 onBreedClick = { breed ->
                     navController.navigate(route = "det/breeds?id=${breed.id}")
                 },

@@ -13,7 +13,7 @@ sealed class BreedDetailsIntent {
 
 sealed class BreedDetailsState {
     object Loading : BreedDetailsState()
-    data class Success(val breed: BreedDetails?, val pic: List<CatImage>?) : BreedDetailsState()
+    data class Success(val breed: BreedDetails, val pic: List<CatImage>?) : BreedDetailsState()
     data class Error(val message: String) : BreedDetailsState()
 }
 
@@ -31,7 +31,7 @@ class BreedDetailsViewModel : ViewModel() {
             try {
                 val breed = BreedRepository.findById(id)
                 val img = BreedRepository.findPictureById(id)
-                _state.value = BreedDetailsState.Success(breed,img)
+                _state.value = BreedDetailsState.Success(breed!!,img)
             } catch (e: Exception) {
                 _state.value = BreedDetailsState.Error("Error loading breeds: ${e.message}")
             }

@@ -24,20 +24,19 @@ import coil.compose.rememberImagePainter
 
 @Composable
 fun BreedDetailsScreen(
-    breed: BreedDetails,
+    state: BreedDetailsState.Success,
     context: Context,
-    img: List<CatImage>?,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (img != null) {
-            val imgR=img.get(0)
+        if (state.pic != null) {
+            val imgR=state.pic.get(0)
             Image(
                 painter = rememberImagePainter(data = imgR.url),
-                contentDescription = breed.name,
+                contentDescription = state.breed.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
@@ -49,7 +48,7 @@ fun BreedDetailsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = breed.name,
+            text = state.breed.name,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
@@ -57,66 +56,66 @@ fun BreedDetailsScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = breed.description,
+            text = state.breed.description,
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Origin countries: ${breed.origin}",
+            text = "Origin countries: ${state.breed.origin}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Temperament: ${breed.temperament}",
+            text = "Temperament: ${state.breed.temperament}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Lifespan: ${breed.life_span}",
+            text = "Lifespan: ${state.breed.life_span}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "adaptability: ${breed.adaptability}",
+            text = "adaptability: ${state.breed.adaptability}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "grooming: ${breed.grooming}",
+            text = "grooming: ${state.breed.grooming}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "hairless: ${breed.hairless}",
+            text = "hairless: ${state.breed.hairless}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "experimental: ${breed.experimental}",
+            text = "experimental: ${state.breed.experimental}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "natural: ${breed.natural}",
+            text = "natural: ${state.breed.natural}",
             fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { openWikipediaPage(context, breed.wikipedia_url) },
+            onClick = { openWikipediaPage(context, state.breed.wikipedia_url) },
         ) {
             Text(text = "Open Wikipedia")
         }
