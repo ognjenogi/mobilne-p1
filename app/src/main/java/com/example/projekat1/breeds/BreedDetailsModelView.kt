@@ -7,10 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-sealed class BreedDetailsIntent {
-    class LoadBreedDetails(val id: String) : BreedDetailsIntent()
-}
-
 sealed class BreedDetailsState {
     object Loading : BreedDetailsState()
     data class Success(val breed: BreedDetails, val pic: List<CatImage>?) : BreedDetailsState()
@@ -20,11 +16,23 @@ sealed class BreedDetailsState {
 class BreedDetailsViewModel : ViewModel() {
     private val _state = MutableStateFlow<BreedDetailsState>(BreedDetailsState.Loading)
     val state: StateFlow<BreedDetailsState> = _state
-
-    fun processIntent(intent: BreedDetailsIntent) {
-        if(intent is BreedDetailsIntent.LoadBreedDetails) loadBreedDetails(intent.id)
+    private val intents = MutableStateFlow<BreedIntent>(BreedIntent.LoadBreedDetails(id =""))
+    init {
+        observeIntents()
     }
 
+    fun processIntent(intent: BreedIntent) {
+        viewModelScope.launch{
+            intents.emit(intent)
+        }
+    }
+    private fun observeIntents(){
+        viewModelScope.launch{
+            intents.collect{
+                if(it is BreedIntent.LoadBreedDetails) loadBreedDetails(it.id)
+            }
+        }
+    }
     private fun loadBreedDetails(id:String) {
         viewModelScope.launch {
             _state.value = BreedDetailsState.Loading

@@ -6,10 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-sealed class BreedListIntent {
-    object LoadBreeds : BreedListIntent()
-    data class SearchByName(val name: String) : BreedListIntent()
-}
 
 sealed class BreedListState {
     object Loading : BreedListState()
@@ -18,18 +14,28 @@ sealed class BreedListState {
 }
 
 class BreedListViewModel : ViewModel() {
-
     private val _state = MutableStateFlow<BreedListState>(BreedListState.Loading)
     val state: StateFlow<BreedListState> = _state
-
+    val intents = MutableStateFlow<BreedIntent>(BreedIntent.LoadBreeds)
     init {
         loadBreeds()
+        observeIntents()
     }
 
-    fun processIntent(intent: BreedListIntent) {
-        when (intent) {
-            is BreedListIntent.LoadBreeds -> loadBreeds()
-            is BreedListIntent.SearchByName -> searchBreedsByName(intent.name)
+    fun processIntent(intent: BreedIntent) {
+        viewModelScope.launch{
+            intents.emit(intent)
+        }
+    }
+    private fun observeIntents(){
+        viewModelScope.launch{
+            intents.collect{
+                when (it) {
+            is BreedIntent.LoadBreeds -> loadBreeds()
+            is BreedIntent.SearchByName -> searchBreedsByName(it.name)
+                    else -> {}
+                }
+            }
         }
     }
 

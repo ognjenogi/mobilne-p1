@@ -21,14 +21,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.projekat1.breeds.BreedDetailsIntent
+
 import com.example.projekat1.breeds.BreedDetailsScreen
 import com.example.projekat1.breeds.BreedDetailsState
 import com.example.projekat1.breeds.BreedDetailsViewModel
-import com.example.projekat1.breeds.BreedListIntent
+import com.example.projekat1.breeds.BreedIntent
 import com.example.projekat1.breeds.BreedListState
 import com.example.projekat1.breeds.BreedListViewModel
 import com.example.projekat1.breeds.BreedsListScreen
+import com.example.projekat1.repository.Controller.onClickDet
+import com.example.projekat1.repository.Controller.onClickSearch
+import com.example.projekat1.repository.Controller.showAll
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
@@ -86,119 +89,6 @@ fun AppNavigation(viewModel:BreedListViewModel,detailsViewModel: BreedDetailsVie
             }
 
 
-        }
-    }
-}
-
-    @Composable
-    fun onClickDet(breedId:String,detailsViewModel: BreedDetailsViewModel){
-
-        val breedsState by detailsViewModel.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            detailsViewModel.processIntent(BreedDetailsIntent.LoadBreedDetails(breedId))
-        }
-
-        when (val state = breedsState) {
-            is BreedDetailsState.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator(
-                        progress = 0.89f,
-                    )
-                }
-
-            }
-            is BreedDetailsState.Success -> {
-                val context = LocalContext.current
-                BreedDetailsScreen(state,context)
-            }
-            is BreedDetailsState.Error -> {
-                Text(text = "Error: ${state.message}")
-            }
-        }
-    }
-
-@SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
-@Composable
-fun onClickSearch(name: String,navController: NavHostController, viewModel: BreedListViewModel) {
-
-    val breedsState by viewModel.state.collectAsState()
-
-    LaunchedEffect(Unit) {
-        if (name.isEmpty())
-            viewModel.processIntent(BreedListIntent.LoadBreeds)
-        else
-            viewModel.processIntent(BreedListIntent.SearchByName(name=name))
-    }
-
-    when (val state = breedsState) {
-        is BreedListState.Loading -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                 CircularProgressIndicator(
-                        progress = 0.89f,
-                )
-            }
-
-        }
-        is BreedListState.Success -> {
-
-            BreedsListScreen(
-                state = state,
-                onBreedClick = { breed ->
-                    navController.navigate(route = "det/breeds?id=${breed.id}")
-                },
-                onSearchClick = { searchText ->
-                    navController.navigate("breeds/search?name=$searchText")
-                }
-            )
-        }
-        is BreedListState.Error -> {
-            Text(text = "Error: ${state.message}")
-        }
-    }
-}
-@Composable
-fun showAll(navController: NavHostController, viewModel: BreedListViewModel) {
-    Log.d("Uslo","isdass")
-
-    val breedsState by viewModel.state.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.processIntent(BreedListIntent.LoadBreeds)
-    }
-
-    when (val state = breedsState) {
-        is BreedListState.Loading -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(
-                    progress = 0.89f,
-                )
-            }
-
-        }
-        is BreedListState.Success -> {
-
-            BreedsListScreen(
-                state= state,
-                onBreedClick = { breed ->
-                    navController.navigate(route = "det/breeds?id=${breed.id}")
-                },
-                onSearchClick = { searchText ->
-                    navController.navigate("breeds/search?name=$searchText")
-                }
-            )
-        }
-        is BreedListState.Error -> {
-            Text(text = "Error: ${state.message}")
         }
     }
 }
