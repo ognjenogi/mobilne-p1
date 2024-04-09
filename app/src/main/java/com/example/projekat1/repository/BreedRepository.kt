@@ -5,6 +5,8 @@ import com.example.projekat1.breeds.Breed
 import com.example.projekat1.breeds.BreedDetails
 import com.example.projekat1.breeds.CatImage
 import com.example.projekat1.config.RetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.URLEncoder
 
 object BreedRepository {
@@ -27,9 +29,10 @@ object BreedRepository {
     }
 
     suspend fun searchBreedsByName(name: String): List<Breed>? {
-        val encodedName = URLEncoder.encode(name, "UTF-8")
+
         return try {
-            val response = catApiService.getBreedsByQuery(encodedName)
+            val response = catApiService.getBreedsByQuery(name)
+            Log.d("pretraga", response.body().toString())
             if (response.isSuccessful) {
                 response.body()
             } else {

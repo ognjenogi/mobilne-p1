@@ -1,4 +1,5 @@
 package com.example.projekat1.breeds
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projekat1.repository.BreedRepository
@@ -60,6 +61,7 @@ class BreedListViewModel : ViewModel() {
                     _state.value = BreedListState.Success(breeds!!)
                 }
                 else  {
+                    Log.d("pretraga",name)
                     val breeds = BreedRepository.searchBreedsByName(name)
                     _state.value = BreedListState.Success(breeds!!)
                 }

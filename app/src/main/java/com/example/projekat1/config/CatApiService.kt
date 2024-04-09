@@ -15,6 +15,6 @@ interface CatApiService {
     @GET("breeds/{breedId}")
     suspend fun getBreedDetails(@Path("breedId") breedId: String): Response<BreedDetails>
     @GET("breeds/search")
-    suspend fun getBreedsByQuery(@Query("q") breedId: String): Response<List<Breed>>
+    suspend fun getBreedsByQuery(@Query("name") name: String): Response<List<Breed>>
 
 }
