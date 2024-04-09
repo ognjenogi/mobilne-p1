@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -115,9 +116,27 @@ fun BreedDetailsScreen(
                 item {  Spacer(modifier = Modifier.height(16.dp)) }
                 item {
                     Text(
-                        text = "Temperament: ${state.breed.temperament}",
+                        text = "Temperament:",
                         fontSize = 16.sp
                     )
+                    val temperamentList = state.breed.temperament.split(",")
+                    val x = if (temperamentList.size % 2 == 0) {
+                        temperamentList.size / 2
+                    } else {
+                        temperamentList.size / 2 + 1
+                    }
+                    Row {
+                        Column {
+                            temperamentList.take(x).forEach { trait ->
+                                Chip(text = trait.trim())
+                            }
+                        }
+                        Column {
+                            temperamentList.takeLast(temperamentList.size -x).forEach { trait ->
+                                Chip(text = trait.trim())
+                            }
+                        }
+                    }
                 }
                 item {  Spacer(modifier = Modifier.height(16.dp)) }
                 item {
