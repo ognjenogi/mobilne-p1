@@ -3,9 +3,11 @@ package com.example.projekat1.breeds
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projekat1.repository.BreedRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 sealed class BreedDetailsState {
     object Loading : BreedDetailsState()
@@ -37,9 +39,11 @@ class BreedDetailsViewModel : ViewModel() {
         viewModelScope.launch {
             _state.value = BreedDetailsState.Loading
             try {
+                withContext(Dispatchers.IO) {
                 val breed = BreedRepository.findById(id)
                 val img = BreedRepository.findPictureById(id)
-                _state.value = BreedDetailsState.Success(breed!!,img)
+                _state.value = BreedDetailsState.Success(breed!!, img)
+            }
             } catch (e: Exception) {
                 _state.value = BreedDetailsState.Error("Error loading breeds: ${e.message}")
             }

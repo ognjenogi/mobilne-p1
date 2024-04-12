@@ -3,9 +3,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projekat1.repository.BreedRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 sealed class BreedListState {
@@ -44,8 +46,10 @@ class BreedListViewModel : ViewModel() {
         viewModelScope.launch {
             _state.value = BreedListState.Loading
             try {
-                val breeds = BreedRepository.getBreeds()
-                _state.value = BreedListState.Success(breeds!!)
+                withContext(Dispatchers.IO){
+                    val breeds = BreedRepository.getBreeds()
+                    _state.value = BreedListState.Success(breeds!!)
+                }
             } catch (e: Exception) {
                 _state.value = BreedListState.Error("Error loading breeds: ${e.message}")
             }
@@ -56,16 +60,16 @@ class BreedListViewModel : ViewModel() {
         viewModelScope.launch {
             _state.value = BreedListState.Loading
             try {
-                if(name.isEmpty()) {
-                    val breeds = BreedRepository.getBreeds()
-                    _state.value = BreedListState.Success(breeds!!)
+                withContext(Dispatchers.IO) {
+                    if (name.isEmpty()) {
+                        val breeds = BreedRepository.getBreeds()
+                        _state.value = BreedListState.Success(breeds!!)
+                    } else {
+                        Log.d("pretraga", name)
+                        val breeds = BreedRepository.searchBreedsByName(name)
+                        _state.value = BreedListState.Success(breeds!!)
+                    }
                 }
-                else  {
-                    Log.d("pretraga",name)
-                    val breeds = BreedRepository.searchBreedsByName(name)
-                    _state.value = BreedListState.Success(breeds!!)
-                }
-
             } catch (e: Exception) {
                 _state.value = BreedListState.Error("Error searching breeds: ${e.message}")
             }
